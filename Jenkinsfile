@@ -1,34 +1,73 @@
+
+
 pipeline {
-     agent {
+   
+    agent {
         docker {
-            image 'python:3.12.6' // Official Python base image
-            args '-u root' // Helps prevent permissions errors within the container
+            image 'python:3.12-slim' 
+            args '-u root' // Permissions errors ।
+      
         }
     }
 
+    // 2. Stages (Building Blocks of CI/CD)
     stages {
-      
-        stage('Build App') {
+        
+        // **Stage 1: Code Checkout (Automatic)**
+        stage('Code Checkout') {
             steps {
-                echo 'Building Python App...'
-                sh 'python --version'
-                sh 'python app.py'
+                
+                echo 'GitHub code workspace check out।'
             }
         }
 
+        // **Stage 2: Dependencies Install**
+        stage('Install Dependencies') {
+            steps {
+                echo 'Python dependencies install ...'
+                
+                dir('app') {
+                    sh 'pip install -r requirements.txt'
+                    sh 'pip install pytest' // Testing
+                }
+            }
+        }
+
+        // **Stage 3: Build & Run**
+        stage('Build & Run App') {
+            steps {
+                echo 'Python App  build  run...'
+            
+                dir('app') {
+                    sh 'python app.py'
+                }
+            }
+        }
+
+        // **Stage 4: Run Tests**
         stage('Run Tests') {
             steps {
-                echo 'Running basic tests...'
-                sh 'echo All tests passed!'
+                echo 'Basic tests run कर रहे हैं...'
+           
+                dir('app') {
+                    sh 'pytest test_app.py' 
+                }
             }
         }
 
-        stage('Finish') {
+        // **Stage 5: Finalize**
+        stage('Finalize') {
             steps {
-                echo 'Build Successful!'
+                echo 'Build Successful! ✅' // Success message 
             }
+        }
+    }
+    
+    // **Post-Build Actions**
+    post {
+        always {
+          
+            cleanWs()
         }
     }
 }
-
-
