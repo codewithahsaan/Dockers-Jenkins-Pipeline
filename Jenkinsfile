@@ -7,13 +7,7 @@ pipeline {
     }
 
     stages {
-        stage('Pull Code') {
-            steps {
-                echo 'Pulling code from GitHub...'
-                git 'https://github.com/codewithahsaan/Dockers-Jenkins-Pipeline.git'
-            }
-        }
-
+      
         stage('Build App') {
             steps {
                 echo 'Building Python App...'
@@ -36,4 +30,5 @@ pipeline {
         }
     }
 }
+
 
