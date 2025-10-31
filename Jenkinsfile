@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+     agent {
+        docker {
+            image 'python:3.12.6' // Official Python base image
+            args '-u root' // Helps prevent permissions errors within the container
+        }
+    }
 
     stages {
         stage('Pull Code') {
@@ -31,3 +36,4 @@ pipeline {
         }
     }
 }
+
