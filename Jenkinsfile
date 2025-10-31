@@ -1,32 +1,30 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11'
-            args '-u root:root'  // gives permission to write files if needed
-        }
-    }
+    agent any
 
     stages {
-        stage('Build Python App') {
+        stage('Check Docker') {
             steps {
-                sh 'python3 app.py'
+                sh 'docker --version'
             }
         }
 
-        stage('Run Tests') {
+        stage('Build Docker Image') {
             steps {
-                sh 'pytest tests/'   // or comment out if no tests
+                sh 'docker build -t myapp:latest .'
             }
         }
 
-        stage('Print Success') {
+        stage('Run Container') {
             steps {
-                echo '✅ Build Successful!'
+                sh 'docker run --rm myapp:latest'
             }
         }
     }
 
     post {
+        success {
+            echo '✅ Docker build and run successful!'
+        }
         failure {
             echo '❌ Build failed!'
         }
