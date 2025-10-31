@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.11'
+            args '-u root:root' // optional, for permissions
+        }
+    }
 
     stages {
         stage('Build Python App') {
