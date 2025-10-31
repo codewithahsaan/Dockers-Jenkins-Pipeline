@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.11'
-            args '-u root:root' // optional, for permissions
+            args '-u root:root'  // gives permission to write files if needed
         }
     }
 
@@ -15,20 +15,20 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'pytest tests/'
+                sh 'pytest tests/'   // or comment out if no tests
             }
         }
 
         stage('Print Success') {
             steps {
-                echo 'Build Successful!'
+                echo '✅ Build Successful!'
             }
         }
     }
 
     post {
         failure {
-            echo 'Build failed!'
+            echo '❌ Build failed!'
         }
     }
 }
